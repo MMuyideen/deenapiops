@@ -1,2 +1,0 @@
-# deenapiops
-APIM APIOps
