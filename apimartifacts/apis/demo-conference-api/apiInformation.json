@@ -11,7 +11,7 @@
     "protocols": [
       "https"
     ],
-    "serviceUrl": "",
+    "serviceUrl": "https://conferenceapi.azurewebsites.net",
     "subscriptionKeyParameterNames": {
       "header": "Ocp-Apim-Subscription-Key",
       "query": "subscription-key"
