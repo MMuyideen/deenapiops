@@ -1,0 +1,21 @@
+{
+  "properties": {
+    "path": "demo",
+    "apiRevision": "1",
+    "apiRevisionDescription": "",
+    "apiVersionDescription": "",
+    "authenticationSettings": {},
+    "description": "",
+    "isCurrent": true,
+    "displayName": "Demo Conference API",
+    "protocols": [
+      "https"
+    ],
+    "serviceUrl": "",
+    "subscriptionKeyParameterNames": {
+      "header": "Ocp-Apim-Subscription-Key",
+      "query": "subscription-key"
+    },
+    "subscriptionRequired": true
+  }
+}
