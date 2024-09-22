@@ -14,7 +14,7 @@ parameters:
   - name: TARGET_BRANCH_NAME
     type: string
     displayName: Target branch for pull request
-    default: main
+    default: master
   - name: CONFIGURATION_YAML_PATH
     type: string
     displayName: Optional configuration file
@@ -31,10 +31,10 @@ parameters:
       - OpenAPIV2Json
   - name: GITHUB_REPOSITORY_NAME
     type: string
-    default: 'deenapiops'
+    default: deenapiops
   - name: GITHUB_USERNAME
     type: string
-    default: 'mmuyideen'
+    default: mmuyideen
 
 trigger: none
 
