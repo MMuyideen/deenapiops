@@ -1,10 +1,12 @@
 parameters:
   - name: APIM_INSTANCE_NAME
     displayName: APIM instance name
+    default: apiops-dev-apim
     type: string
   - name: RESOURCE_GROUP_NAME
     displayName: APIM instance resource group name
     type: string
+    default: apiops-dev-rg
   - name: APIM_REPOSITORY_NAME
     type: string
     displayName: APIM repository for pull request
