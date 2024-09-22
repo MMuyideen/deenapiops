@@ -252,7 +252,7 @@ stages:
               Write-Information "Cloning branch $branchName in repository $repositoryName..."
               $cloneUrl = "{{  parameters.APIM_REPOSITORY_NAME }}.git"
               Write-Information "Clone URL is $cloneUrl"
-              git -c http.extraheader="AUTHORIZATION: Bearer $(GITHUB_PAT)" clone --branch "$branchName" --depth 1 "$cloneUrl" "$temporaryFolderPath"
+              git clone https://$(GITHUB_PAT)@github.com/mmuyideen/deenapiops.git $(Build.SourcesDirectory)/$temporaryFolderPath
               if ($LASTEXITCODE -ne 0) { throw "Cloning branch $branchName in repository $repositoryName failed." }
 
 
