@@ -272,27 +272,14 @@ stages:
                 Write-Host "##vso[task.setvariable variable=NEW_BRANCH_NAME]extract_$(Build.BuildId)"
 
               Write-Information "Creating pull request..."
-              $prBody = "Merging artifacts from portal (Build $(Build.BuildId))"
-              $prUrl = "https://api.github.com/repos/${{ parameters.GITHUB_USERNAME }}/$repositoryName/pulls"
-              $prData = @{
-                  title = "Merging artifacts from portal (Build $(Build.BuildId))"
-                  head = "$temporaryBranchName"
-                  base = "$branchName"
-                  body = $prBody
-              } | ConvertTo-Json
 
-              $headers = @{
-                  Authorization = "Bearer $(GITHUB_PAT)"
-                  Accept = "application/vnd.github.v3+json"
-              }
+                gh auth login 
+                gh pr create --title "Extracted components from APIM" --body "Exracted APIs." --base ${{ parameters.TARGET_BRANCH_NAME }} --head $(NEW_BRANCH_NAME) --repo https://github.com/mmuyideen/deenapiops.git
 
-              Invoke-RestMethod -Uri $prUrl -Method Post -Body $prData -Headers $headers -ContentType "application/json"
-
-              Write-Information "Deleting temporary folder contents..."
-              Remove-Item -Path "$temporaryFolderPath" -Recurse -Force
-
-              Write-Information "Execution complete."
+                Write-Host "Pull request created successfully."
+              
             pwsh: true
+            
           env:
             GITHUB_PAT: $(GITHUB_PAT)
 
