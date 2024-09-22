@@ -247,13 +247,15 @@ stages:
 
               $branchName = "${{ parameters.TARGET_BRANCH_NAME }}"
               $temporaryBranchName = "artifacts-from-portal-build-$(Build.BuildId)"
-              $repositoryName = "${{ parameters.GITHUB_REPOSITORY_NAME }}"
-              $repositoryuserName = "${{ parameters.GITHUB_USERNAME }}"
+              # $repositoryName = "${{ parameters.GITHUB_REPOSITORY_NAME }}"
+              # $repositoryuserName = "${{ parameters.GITHUB_USERNAME }}"
               Write-Information "Cloning branch $branchName in repository $repositoryName..."
-              $cloneUrl = "https://github.com/$repositoryuserName/$repositoryName.git"
-              Write-Information "Clone URL is $cloneUrl"
-              git -c http.extraheader="AUTHORIZATION: Bearer $(GITHUB_PAT)" clone --branch "$branchName" --depth 1 "$cloneUrl" "$temporaryFolderPath"
-              if ($LASTEXITCODE -ne 0) { throw "Cloning branch $branchName in repository $repositoryName failed." }
+              # $cloneUrl = "https://github.com/$repositoryuserName/$repositoryName.git"
+              # Write-Information "Clone URL is $cloneUrl"
+              # git -c http.extraheader="AUTHORIZATION: Bearer $(GITHUB_PAT)" clone --branch "$branchName" --depth 1 "$cloneUrl" "$temporaryFolderPath"
+              # if ($LASTEXITCODE -ne 0) { throw "Cloning branch $branchName in repository $repositoryName failed." }
+              git clone https://$(GITHUB_PAT)@github.com/${{ parameters.GITHUB_USERNAME }}/${{ parameters.GITHUB_REPOSITORY_NAME }}.git $(Build.SourcesDirectory)/repo
+
 
               Write-Information "Creating temporary branch $temporaryBranchName from $branchName..."
               git -C "$temporaryFolderPath" checkout -b "$temporaryBranchName" "$branchName"
