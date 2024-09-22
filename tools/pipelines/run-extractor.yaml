@@ -249,7 +249,7 @@ stages:
               $temporaryBranchName = "artifacts-from-portal-build-$(Build.BuildId)"
               $repositoryName = "${{ parameters.GITHUB_REPOSITORY_NAME }}"
               Write-Information "Cloning branch $branchName in repository $repositoryName..."
-              $cloneUrl = "${{ parameters.APIM_REPOSITORY_NAME }}.git"
+              $cloneUrl = "https://github.com/$githubUsername/$repositoryName.git"
               Write-Information "Clone URL is $cloneUrl"
               git -c http.extraheader="AUTHORIZATION: Bearer $(GITHUB_PAT)" clone --branch "$branchName" --depth 1 "$cloneUrl" "$temporaryFolderPath"
               if ($LASTEXITCODE -ne 0) { throw "Cloning branch $branchName in repository $repositoryName failed." }
