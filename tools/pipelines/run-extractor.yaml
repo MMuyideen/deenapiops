@@ -246,7 +246,8 @@ stages:
               New-Item -Path "$temporaryFolderPath" -ItemType "Directory"
 
               $branchName = "${{ parameters.TARGET_BRANCH_NAME }}"
-              $temporaryBranchName = "artifacts-from-portal-build-$(Build.BuildId)"
+              $temporaryBranchName = "artifacts-from-portal-build-$(Build.BuildId)" #tbr
+              $branchnamenew = "extract_$(Build.BuildId)"
               $repositoryName = "${{ parameters.GITHUB_REPOSITORY_NAME }}"
               $repositoryuserName = "${{ parameters.GITHUB_USERNAME }}"
               Write-Information "Cloning branch $branchName in repository $repositoryName..."
@@ -259,7 +260,7 @@ stages:
 
                 # Create a new branch
                 cd $(Build.SourcesDirectory)/repo
-                git checkout -b "extract_$(Build.BuildId)"
+                git checkout -b "$branchnamenew" "$branchName""
 
                 # Copy the extracted artifacts to the repository
                 cp -r $(Build.ArtifactStagingDirectory)/${{ parameters.API_MANAGEMENT_SERVICE_OUTPUT_FOLDER_PATH }}/* $(Build.SourcesDirectory)/repo
