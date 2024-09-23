@@ -277,7 +277,7 @@ stages:
               $prData = @{
                   title = "Merging artifacts from portal (Build $(Build.BuildId))"
                   head = "$temporaryBranchName"
-                  base = "$NEW_BRANCH_NAME"
+                  base = "$branchName"
                   body = $prBody
               } | ConvertTo-Json
 
