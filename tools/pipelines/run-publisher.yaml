@@ -30,8 +30,7 @@ stages:
     jobs:
       - job: push_changes_to_Dev_APIM
         displayName: Push changes to Dev APIM
-        pool:
-          vmImage: ubuntu-latest
+        pool: Default
         steps:
           - template: run-publisher-with-env.yaml
             parameters:
