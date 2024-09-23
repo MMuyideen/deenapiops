@@ -47,8 +47,7 @@ stages:
         variables:
           #setting the testSecretValue to the prod resource group name as an example
           testSecretValue: $(RESOURCE_GROUP_NAME_Prod)
-        pool:
-          vmImage: ubuntu-latest
+        pool: Default
         # creates an environment if it doesn't exist
         environment: 'Prod'
         strategy:
