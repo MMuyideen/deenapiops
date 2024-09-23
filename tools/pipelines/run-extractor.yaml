@@ -259,7 +259,9 @@ stages:
               git checkout -b $newBranchName
 
               # Copy the extracted artifacts to the repository
-              Copy-Item -Path "$(Build.ArtifactStagingDirectory)/${{ parameters.API_MANAGEMENT_SERVICE_OUTPUT_FOLDER_PATH }}/*" -Destination "$(Build.SourcesDirectory)/repo" -Recurse -Force
+              $artifactsPath = "$(Pipeline.Workspace)/artifacts"
+              Write-Information "Artifacts path: $artifactsPath"
+              Copy-Item -Path "$artifactsPath/*" -Destination "$(Build.SourcesDirectory)/repo" -Recurse -Force
 
               # Push the new branch to the repository
               git config user.email "azuredevops@example.com"
