@@ -1,6 +1,6 @@
 openapi: 3.0.1
 info:
-  title: Demo Conference API
+  title: Demo Conference API-edited
   description: ''
   version: '1.0'
 servers:
@@ -50,7 +50,7 @@ paths:
             text/plain: { }
   '/session/{id}/topics':
     get:
-      summary: GetSessionTopicsdeensg
+      summary: GetSessionTopics
       description: A list of topics covered by a particular session
       operationId: GetSessionTopics
       parameters:
@@ -228,6 +228,13 @@ paths:
           description: OK
           content:
             application/vnd.collection+json: { }
+  /name:
+    get:
+      summary: /name - GET
+      operationId: get-name
+      responses:
+        '200':
+          description: OK
 components:
   schemas:
     Body:
