@@ -50,7 +50,7 @@ paths:
             text/plain: { }
   '/session/{id}/topics':
     get:
-      summary: GetSessionTopics
+      summary: GetSessionTopicsdeensg
       description: A list of topics covered by a particular session
       operationId: GetSessionTopics
       parameters:
