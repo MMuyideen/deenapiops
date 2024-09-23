@@ -243,42 +243,42 @@ stages:
 
               Write-Information "Creating temporary folder..."
               $temporaryFolderPath = Join-Path "$(Agent.TempDirectory)" "artifacts-from-portal"
-              New-Item -Path "$temporaryFolderPath" -ItemType "Directory"
+              New-Item -Path "$temporaryFolderPath" -ItemType "Directory" -Force
 
               $branchName = "${{ parameters.TARGET_BRANCH_NAME }}"
-              $temporaryBranchName = "artifacts-from-portal-build-$(Build.BuildId)" #tbr
-              $branchnamenew = "extract_$(Build.BuildId)"
+              $newBranchName = "extract_$(Build.BuildId)"
               $repositoryName = "${{ parameters.GITHUB_REPOSITORY_NAME }}"
-              $repositoryuserName = "${{ parameters.GITHUB_USERNAME }}"
-              Write-Information "Cloning branch $branchName in repository $repositoryName..."
-              $cloneUrl = "{{  parameters.APIM_REPOSITORY_NAME }}.git"
+              $repositoryUserName = "${{ parameters.GITHUB_USERNAME }}"
+
+              Write-Information "Cloning repository $repositoryName..."
+              $cloneUrl = "https://$(GITHUB_PAT)@github.com/$repositoryUserName/$repositoryName.git"
               Write-Information "Clone URL is $cloneUrl"
-              echo $cloneurl
-              git clone https://$(GITHUB_PAT)@github.com/mmuyideen/deenapiops.git $(Build.SourcesDirectory)/repo
-              if ($LASTEXITCODE -ne 0) { throw "Cloning branch $branchName in repository $repositoryName failed." }
+              git clone $cloneUrl $(Build.SourcesDirectory)/repo
+              if ($LASTEXITCODE -ne 0) { throw "Cloning repository $repositoryName failed." }
 
+              # Create a new branch
+              Set-Location $(Build.SourcesDirectory)/repo
+              git checkout -b $newBranchName
 
-                # Create a new branch
-                cd $(Build.SourcesDirectory)/repo
-                git checkout -b $branchnamenew
+              # Copy the extracted artifacts to the repository
+              Copy-Item -Path "$(Build.ArtifactStagingDirectory)/${{ parameters.API_MANAGEMENT_SERVICE_OUTPUT_FOLDER_PATH }}/*" -Destination "$(Build.SourcesDirectory)/repo" -Recurse -Force
 
-                # Copy the extracted artifacts to the repository
-                cp -r $(Build.ArtifactStagingDirectory)/${{ parameters.API_MANAGEMENT_SERVICE_OUTPUT_FOLDER_PATH }}/* $(Build.SourcesDirectory)/repo
+              # Push the new branch to the repository
+              git config user.email "azuredevops@example.com"
+              git config user.name "Azure DevOps Pipeline"
+              git add .
+              git commit -m "Extracted APIs, products, policies, named values, backend services, authorization servers, and service settings from APIM."
+              git push origin $newBranchName
 
-                # Push the new branch to the repository
-                git add .
-                git commit -m "Extracted APIs, products, policies, named values, backend services, authorization servers, and service settings from APIM."
-                git push origin "extract_$(Build.BuildId)"
-
-                Write-Host "##vso[task.setvariable variable=NEW_BRANCH_NAME]extract_$(Build.BuildId)"
+              Write-Host "##vso[task.setvariable variable=NEW_BRANCH_NAME]$newBranchName"
 
               Write-Information "Creating pull request..."
               $prBody = "Merging artifacts from portal (Build $(Build.BuildId))"
-              $prUrl = "https://api.github.com/repos/${{ parameters.GITHUB_USERNAME }}/$repositoryName/pulls"
+              $prUrl = "https://api.github.com/repos/$repositoryUserName/$repositoryName/pulls"
               $prData = @{
                   title = "Merging artifacts from portal (Build $(Build.BuildId))"
-                  head = "$temporaryBranchName"
-                  base = "$branchName"
+                  head = $newBranchName
+                  base = $branchName
                   body = $prBody
               } | ConvertTo-Json
 
@@ -287,10 +287,11 @@ stages:
                   Accept = "application/vnd.github.v3+json"
               }
 
-              Invoke-RestMethod -Uri $prUrl -Method Post -Body $prData -Headers $headers -ContentType "application/json"
+              $response = Invoke-RestMethod -Uri $prUrl -Method Post -Body $prData -Headers $headers -ContentType "application/json"
+              Write-Information "Pull request created: $($response.html_url)"
 
               Write-Information "Deleting temporary folder contents..."
-              Remove-Item -Path "$temporaryFolderPath" -Recurse -Force
+              Remove-Item -Path $temporaryFolderPath -Recurse -Force
 
               Write-Information "Execution complete."
             pwsh: true
