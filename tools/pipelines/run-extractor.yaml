@@ -54,7 +54,6 @@ stages:
       - job: create_artifact_from_portal
         displayName: Create artifact from portal
         pool: Default
-          # vmImage: ubuntu-latest
         steps:
           - task: AzureCLI@2
             displayName: Set extraction variables
@@ -223,14 +222,13 @@ stages:
     - job: create_artifacts_pull_request
       displayName: Create artifacts pull request
       pool: Default
-        # vmImage: ubuntu-latest
       steps:
         - task: DownloadPipelineArtifact@2
           displayName: Download pipeline artifact
           inputs:
             source: current
             artifactName: artifacts-from-portal
-            targetPath: $(Pipeline.Workspace)/artifacts-from-portal
+            targetPath: $(Pipeline.Workspace)/artifacts
         - task: PowerShell@2
           displayName: Create pull request
           inputs:
@@ -252,7 +250,7 @@ stages:
 
               Write-Information "Cloning repository $repositoryName..."
               $cloneUrl = "https://$(GITHUB_PAT)@github.com/$repositoryUserName/$repositoryName.git"
-              Write-Information "Clone URL is $cloneUrl"
+              # Write-Information "Clone URL is $cloneUrl"
               git clone $cloneUrl $(Build.SourcesDirectory)/repo
               if ($LASTEXITCODE -ne 0) { throw "Cloning repository $repositoryName failed." }
 
